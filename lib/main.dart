@@ -122,108 +122,10 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'screens/login_screen.dart';
 
 void main() {
   runApp(
     const MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen()),
   );
-}
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFEAF1FB),
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          margin: const EdgeInsets.symmetric(horizontal: 24),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF00AEEF),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.person, size: 48, color: Colors.white),
-              ),
-
-              const SizedBox(height: 20),
-
-              const Text(
-                "Welcome to Recofrend",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-
-              const SizedBox(height: 10),
-              const Text(
-                "Enter your phone number to continue",
-                style: TextStyle(color: Colors.grey),
-              ),
-
-              const SizedBox(height: 15),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Phone Number",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              TextField(
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.phone),
-                  hintText: "Enter your phone number",
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey, width: 2.0),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF00AEEF), // Blue button
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    "Send OTP",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
