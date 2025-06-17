@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
-  const OtpVerificationScreen({super.key});
+  final String phonenumber;
+  const OtpVerificationScreen({super.key, required this.phonenumber});
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +48,13 @@ class OtpVerificationScreen extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               const Text(
-                "Enter the verfication code sent to phone number",
-                style: TextStyle(color: Color.fromARGB(255, 94, 94, 94)),
+                'Enter the verfication code sent to',
+                style: TextStyle(color: Color.fromARGB(255, 68, 68, 68)),
+              ),
+
+              Text(
+                phonenumber,
+                style: TextStyle(color: Color.fromARGB(255, 68, 68, 68)),
               ),
 
               const SizedBox(height: 25),
@@ -73,7 +79,7 @@ class OtpVerificationScreen extends StatelessWidget {
                 //set to true to show as box or false to show as dash
                 // showFieldAsBox: true,
                 //runs when a code is typed in
-                // autoFocus: true,
+                autoFocus: true,
                 onCodeChanged: (String code) {
                   //handle validation or checks here
                 },
@@ -91,7 +97,7 @@ class OtpVerificationScreen extends StatelessWidget {
                 // }, // end onSubmit
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 40),
 
               SizedBox(
                 width: double.infinity,
@@ -139,7 +145,7 @@ class OtpVerificationScreen extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 15),
+              const SizedBox(height: 20),
 
               SizedBox(
                 width: double.infinity,
