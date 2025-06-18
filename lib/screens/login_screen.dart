@@ -126,7 +126,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: isSendingOtp ? null : sendOtp,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isSendingOtp
-                        ? Colors.grey
+                        ? const Color.fromARGB(255, 108, 145, 182)
                         : const Color(0xFF00AEEF),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
