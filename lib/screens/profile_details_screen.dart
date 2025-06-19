@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ProfileDetailsScreen extends StatefulWidget {
   const ProfileDetailsScreen({super.key});
@@ -8,6 +9,7 @@ class ProfileDetailsScreen extends StatefulWidget {
 }
 
 class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
+  String? selectedValue;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +66,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                     ),
                   ),
 
-                  // Progress bar
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 24,
@@ -94,7 +95,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                     ),
                   ),
 
-                  // Form content
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
@@ -126,7 +126,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.black,
-                          elevation: 0,
+                          elevation: 1,
                           side: BorderSide(color: Colors.grey.shade300),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -141,7 +141,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.black,
-                          elevation: 0,
+                          elevation: 1,
                           side: BorderSide(color: Colors.grey.shade300),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -199,7 +199,239 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.calendar_today, size: 20),
+                            const SizedBox(width: 5),
+                            const Text(
+                              "Age (optional)",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          decoration: InputDecoration(
+                            hintText: "Your age",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.person),
+                            const SizedBox(width: 5),
+                            const Text(
+                              "Sex (optional)",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 8),
+                        DropdownButtonFormField<String>(
+                          value: selectedValue,
+                          hint: Text("Select your sex"),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 16,
+                            ),
+                          ),
+                          dropdownColor: Colors.white,
+                          items:
+                              [
+                                'Prefer not to say',
+                                'Male',
+                                'Female',
+                                'Other',
+                              ].map((value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedValue = newValue!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.location_on_outlined),
+                            const SizedBox(width: 5),
+                            const Text(
+                              "City (optional)",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Flexible(
+                              flex: 5,
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  hintText: "Your city",
+                                  border: OutlineInputBorder(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Flexible(
+                              flex: 1,
+                              child: ElevatedButton.icon(
+                                onPressed: () {},
+                                label: Icon(Icons.location_on_outlined),
+                                style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(vertical: 18),
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  elevation: 2,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Bio (optional)",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          minLines: 4,
+                          maxLines: 8,
+                          decoration: InputDecoration(
+                            hintText: "Tell us a bit about yourself",
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // const SizedBox(height: ),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(219, 198, 227, 242),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: const Color.fromARGB(255, 167, 188, 237),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Icon(
+                                Icons.info_outline,
+                                color: Color.fromARGB(255, 70, 166, 245),
+                              ),
+                              SizedBox(width: 8),
+                              // Icon(
+                              //   Icons.recommend_outlined,
+                              //   color: Color.fromARGB(255, 70, 166, 240),
+                              // ),
+                              SizedBox(width: 2),
+                              Expanded(
+                                child: Text(
+                                  'Adding more information helps us provide more relevant and personalized recommendations just for you!',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(255, 23, 129, 250),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 50),
+                  Padding(
+                    padding: EdgeInsetsGeometry.fromLTRB(0, 0, 15, 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {},
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            foregroundColor: Colors.white,
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(8),
+                            ),
+                          ),
+                          child: Text('Next'),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

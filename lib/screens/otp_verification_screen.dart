@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:recofrend/screens/profile_details_screen.dart';
 
-class OtpVerificationScreen extends StatelessWidget {
+class OtpVerificationScreen extends StatefulWidget {
   final String phonenumber;
   const OtpVerificationScreen({super.key, required this.phonenumber});
 
+  @override
+  State<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
+}
+
+class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,23 +27,13 @@ class OtpVerificationScreen extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // App logo
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(
-                    255,
-                    55,
-                    184,
-                    231,
-                  ), // Blue background
+                  color: const Color.fromARGB(255, 55, 184, 231),
                   borderRadius: BorderRadius.circular(25),
                 ),
-                child: const Icon(
-                  Icons.person, // Placeholder for your logo
-                  size: 48,
-                  color: Colors.white,
-                ),
+                child: const Icon(Icons.person, size: 48, color: Colors.white),
               ),
 
               const SizedBox(height: 20),
@@ -53,7 +49,7 @@ class OtpVerificationScreen extends StatelessWidget {
               ),
 
               Text(
-                phonenumber,
+                widget.phonenumber,
                 style: TextStyle(color: Color.fromARGB(255, 68, 68, 68)),
               ),
 
@@ -102,8 +98,13 @@ class OtpVerificationScreen extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Handle send OTP
+                  onPressed: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProfileDetailsScreen(),
+                      ),
+                    ),
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF00AEEF), // Blue button
@@ -125,7 +126,7 @@ class OtpVerificationScreen extends StatelessWidget {
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    Navigator.pop(context); // Handle send OTP
+                    Navigator.pop(context);
                   },
                   style: OutlinedButton.styleFrom(
                     backgroundColor: Colors.white, // Blue button
