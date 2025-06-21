@@ -49,7 +49,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
               child: Column(
                 children: [
                   const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
+                    padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                     child: Chip(
                       labelPadding: EdgeInsets.symmetric(
                         horizontal: 12,
@@ -78,7 +78,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         LinearProgressIndicator(
-                          value: 0.2,
+                          value: 0.3,
                           minHeight: 7,
                           backgroundColor: Colors.grey[300],
                           valueColor: AlwaysStoppedAnimation<Color>(
@@ -311,7 +311,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                         const SizedBox(height: 8),
                         Row(
                           children: [
-                            Flexible(
+                            Expanded(
                               flex: 5,
                               child: TextField(
                                 decoration: InputDecoration(
@@ -321,7 +321,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               ),
                             ),
                             const SizedBox(width: 10),
-                            Flexible(
+                            Expanded(
                               flex: 1,
                               child: ElevatedButton.icon(
                                 onPressed: () {},

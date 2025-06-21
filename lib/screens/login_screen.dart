@@ -31,6 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     await Future.delayed(const Duration(seconds: 1));
 
+    if (!mounted) return; // ✅ Add this line
+
     setState(() {
       isSendingOtp = false;
     });
@@ -54,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFEAF1FB),
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(22),

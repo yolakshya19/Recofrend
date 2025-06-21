@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:recofrend/screens/profile_details_screen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
@@ -15,6 +15,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFEAF1FB),
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Container(
           padding: const EdgeInsets.all(24),
@@ -67,33 +68,39 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ),
 
               const SizedBox(height: 20),
-              OtpTextField(
-                numberOfFields: 6,
-                cursorColor: Colors.black,
-                // borderColor: Colors.black,
-                focusedBorderColor: Colors.black,
-                //set to true to show as box or false to show as dash
-                // showFieldAsBox: true,
-                //runs when a code is typed in
+
+              PinCodeTextField(
+                appContext: context,
+                length: 6,
                 autoFocus: true,
-                onCodeChanged: (String code) {
-                  //handle validation or checks here
-                },
-                //runs when every textfield is filled
-                // onSubmit: (String verificationCode) {
-                //   showDialog(
-                //     context: context,
-                //     builder: (context) {
-                //       return AlertDialog(
-                //         title: Text("Verification Code"),
-                //         content: Text('Code entered is $verificationCode'),
-                //       );
-                //     },
-                //   );
-                // }, // end onSubmit
+                obscureText: false,
+                animationType: AnimationType.fade,
+                pinTheme: PinTheme(
+                  shape: PinCodeFieldShape.underline,
+                  fieldHeight: 50,
+                  fieldWidth: 40,
+                  activeFillColor: Colors.white,
+                  inactiveFillColor: Colors.white,
+                  selectedFillColor: Colors.white,
+                  activeColor: Colors.black,
+                  selectedColor: Colors.blue,
+                  inactiveColor: Colors.grey,
+                ),
+                cursorColor: Colors.black,
+                backgroundColor: Colors.transparent,
+                enableActiveFill: true,
+                keyboardType: TextInputType.number,
+                // onChanged: (value) {
+                //   // You can track input here
+                // },
+                // onCompleted: (value) {
+                //   // Auto call when 6 digits are entered
+                //   print("Completed: $value");
+                //   // You can auto-verify or move to next screen here
+                // },
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 30),
 
               SizedBox(
                 width: double.infinity,
