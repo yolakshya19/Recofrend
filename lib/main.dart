@@ -122,7 +122,6 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:recofrend/screens/profile_details_screen.dart';
 import 'screens/login_screen.dart';
 
 void main() {

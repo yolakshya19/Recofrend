@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'interests_screen.dart';
 
 class ProfileDetailsScreen extends StatefulWidget {
   const ProfileDetailsScreen({super.key});
@@ -16,26 +17,28 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
       backgroundColor: Colors.white,
       body: Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: const Color.fromARGB(255, 177, 177, 177),
-                  blurRadius: 4,
-                  offset: Offset(0, 3),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
-            width: double.infinity,
-            child: Center(
-              child: Text(
-                "Recofrend",
-                style: TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.lightBlue,
+          SafeArea(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 177, 177, 177),
+                    blurRadius: 4,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              // padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
+              width: double.infinity,
+              child: Center(
+                child: Text(
+                  "Recofrend",
+                  style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.lightBlue,
+                  ),
                 ),
               ),
             ),
@@ -46,7 +49,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
               child: Column(
                 children: [
                   const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 25),
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
                     child: Chip(
                       labelPadding: EdgeInsets.symmetric(
                         horizontal: 12,
@@ -76,7 +79,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                       children: [
                         LinearProgressIndicator(
                           value: 0.2,
-                          minHeight: 6,
+                          minHeight: 7,
                           backgroundColor: Colors.grey[300],
                           valueColor: AlwaysStoppedAnimation<Color>(
                             Colors.lightBlue,
@@ -153,7 +156,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
                   const SizedBox(height: 24),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -177,7 +180,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
                   const SizedBox(height: 16),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -201,7 +204,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
                   const SizedBox(height: 16),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -235,7 +238,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
                   const SizedBox(height: 16),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -288,7 +291,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                   ),
                   const SizedBox(height: 16),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -341,7 +344,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                   ),
                   const SizedBox(height: 16),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -367,7 +370,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
                   const SizedBox(height: 20),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -385,21 +388,18 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: const [
-                              Icon(
-                                Icons.info_outline,
-                                color: Color.fromARGB(255, 70, 166, 245),
+                              Image(
+                                image: AssetImage('assets/bulb.png'),
+                                width: 25,
+                                height: 25,
                               ),
-                              SizedBox(width: 8),
-                              // Icon(
-                              //   Icons.recommend_outlined,
-                              //   color: Color.fromARGB(255, 70, 166, 240),
-                              // ),
-                              SizedBox(width: 2),
+                              SizedBox(width: 5),
                               Expanded(
                                 child: Text(
                                   'Adding more information helps us provide more relevant and personalized recommendations just for you!',
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
+                                    fontSize: 15,
                                     color: Color.fromARGB(255, 23, 129, 250),
                                   ),
                                 ),
@@ -413,12 +413,19 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
                   const SizedBox(height: 50),
                   Padding(
-                    padding: EdgeInsetsGeometry.fromLTRB(0, 0, 15, 20),
+                    padding: EdgeInsetsGeometry.fromLTRB(0, 0, 20, 25),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () => {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const InterestsScreen(),
+                              ),
+                            ),
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,
                             foregroundColor: Colors.white,
