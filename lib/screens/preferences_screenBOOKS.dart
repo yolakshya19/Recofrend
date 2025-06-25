@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:recofrend/screens/interests_screen.dart';
+import 'package:recofrend/screens/review_screen.dart';
 
 class PreferencesScreenbooks extends StatefulWidget {
   const PreferencesScreenbooks({super.key});
@@ -248,12 +249,12 @@ class _PreferencesScreenbooksState extends State<PreferencesScreenbooks> {
                         ),
                         ElevatedButton(
                           onPressed: () => {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => const PreferencesScreenfood(),
-                            //   ),
-                            // ),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ReviewScreen(),
+                              ),
+                            ),
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,

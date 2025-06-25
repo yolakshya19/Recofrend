@@ -27,22 +27,44 @@ class _InterestsScreenState extends State<InterestsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 177, 177, 177),
+                    blurRadius: 4,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              // padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
+              width: double.infinity,
               child: Center(
-                child: Chip(
-                  labelPadding: EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
+                child: Text(
+                  "Recofrend",
+                  style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.lightBlue,
                   ),
-                  avatar: Icon(Icons.access_time, color: Colors.grey, size: 20),
-                  label: Text(
-                    "30 seconds more",
-                    style: TextStyle(color: Colors.black87),
-                  ),
-                  backgroundColor: Color(0xFFF1F3F6),
-                  shape: StadiumBorder(),
                 ),
+              ),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+            child: Center(
+              child: Chip(
+                labelPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                avatar: Icon(Icons.access_time, color: Colors.grey, size: 20),
+                label: Text(
+                  "30 seconds more",
+                  style: TextStyle(color: Colors.black87),
+                ),
+                backgroundColor: Color(0xFFF1F3F6),
+                shape: StadiumBorder(),
               ),
             ),
           ),
@@ -98,7 +120,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: Wrap(
                     spacing: 25,
-                    runSpacing: 25,
+                    runSpacing: 22,
                     children: interests.map((item) {
                       final isSelected = selected.contains(item['label']);
                       return GestureDetector(
