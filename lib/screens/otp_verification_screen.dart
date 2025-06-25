@@ -4,13 +4,47 @@ import 'package:recofrend/screens/profile_details_screen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String phonenumber;
-  const OtpVerificationScreen({super.key, required this.phonenumber});
+  final bool showAlert;
+  const OtpVerificationScreen({
+    super.key,
+    required this.phonenumber,
+    this.showAlert = false,
+  });
 
   @override
   State<OtpVerificationScreen> createState() => _OtpVerificationScreenState();
 }
 
 class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
+  String otpCode = '';
+  bool showValidationMsg = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.showAlert) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: const Text("OTP Sent"),
+            content: Text("OTP has been sent to ${widget.phonenumber}"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("OK", style: TextStyle(color: Colors.black)),
+              ),
+            ],
+          ),
+        );
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,13 +89,13 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               ),
 
               const SizedBox(height: 25),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Verification Code",
                   style: TextStyle(
                     fontSize: 16.0,
-                    color: Colors.black,
+                    color: showValidationMsg ? Colors.red : Colors.black,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -72,7 +106,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               PinCodeTextField(
                 appContext: context,
                 length: 6,
-                autoFocus: true,
+                autoFocus: false,
                 obscureText: false,
                 animationType: AnimationType.fade,
                 pinTheme: PinTheme(
@@ -90,39 +124,58 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 backgroundColor: Colors.transparent,
                 enableActiveFill: true,
                 keyboardType: TextInputType.number,
-                // onChanged: (value) {
-                //   // You can track input here
-                // },
-                // onCompleted: (value) {
-                //   // Auto call when 6 digits are entered
-                //   print("Completed: $value");
-                //   // You can auto-verify or move to next screen here
-                // },
+                onChanged: (value) {
+                  setState(() {
+                    otpCode = value;
+                    showValidationMsg = value.length < 6;
+                  });
+                },
               ),
 
-              const SizedBox(height: 30),
+              if (showValidationMsg)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 5, top: 5),
+                  child: Text(
+                    "OTP must be 6 digits",
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+              const SizedBox(height: 20),
 
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileDetailsScreen(),
-                      ),
-                    ),
-                  },
+                  onPressed: otpCode.length == 6
+                      ? () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const ProfileDetailsScreen(),
+                            ),
+                          ),
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF00AEEF), // Blue button
+                    backgroundColor: const Color(0xFF00AEEF),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Verify OTP",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: otpCode.length == 6
+                          ? Colors.white
+                          : const Color.fromARGB(255, 133, 131, 131),
+                    ),
                   ),
                 ),
               ),
@@ -132,7 +185,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await Future.delayed(Duration(milliseconds: 500));
                     Navigator.pop(context);
                   },
                   style: OutlinedButton.styleFrom(
@@ -159,7 +213,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () {
-                    // Handle send OTP
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('OTP resent to ${widget.phonenumber}'),
+                      ),
+                    );
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.white, // Blue button

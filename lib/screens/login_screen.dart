@@ -40,8 +40,10 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            OtpVerificationScreen(phonenumber: _phoneController.text),
+        builder: (context) => OtpVerificationScreen(
+          phonenumber: _phoneController.text,
+          showAlert: true,
+        ),
       ),
     );
   }
