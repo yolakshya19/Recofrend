@@ -37,47 +37,29 @@ class _PreferencesScreengooutState extends State<PreferencesScreengoout> {
       body: Column(
         children: [
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color.fromARGB(255, 177, 177, 177),
+                    blurRadius: 4,
+                    offset: Offset(0, 3),
+                  ),
+                ],
+              ),
+              // padding: const EdgeInsets.fromLTRB(16, 40, 16, 20),
+              width: double.infinity,
               child: Center(
-                child: Chip(
-                  labelPadding: EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
+                child: Text(
+                  "Recofrend",
+                  style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.lightBlue,
                   ),
-                  avatar: Icon(Icons.access_time, color: Colors.grey, size: 20),
-                  label: Text(
-                    "Almost done!",
-                    style: TextStyle(color: Colors.black87),
-                  ),
-                  backgroundColor: Color(0xFFF1F3F6),
-                  shape: StadiumBorder(),
                 ),
               ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                LinearProgressIndicator(
-                  value: 0.5,
-                  minHeight: 7,
-                  backgroundColor: Colors.grey[300],
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlue),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text("Start", style: TextStyle(fontSize: 14)),
-                    Text("Finish", style: TextStyle(fontSize: 14)),
-                  ],
-                ),
-              ],
             ),
           ),
 
@@ -85,6 +67,58 @@ class _PreferencesScreengooutState extends State<PreferencesScreengoout> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+                    child: Center(
+                      child: Chip(
+                        labelPadding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        avatar: Icon(
+                          Icons.access_time,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
+                        label: Text(
+                          "Almost done!",
+                          style: TextStyle(color: Colors.black87),
+                        ),
+                        backgroundColor: Color(0xFFF1F3F6),
+                        shape: StadiumBorder(),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 10,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        LinearProgressIndicator(
+                          value: 0.5,
+                          minHeight: 7,
+                          backgroundColor: Colors.grey[300],
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.lightBlue,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text("Start", style: TextStyle(fontSize: 14)),
+                            Text("Finish", style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
                   Padding(
                     padding: EdgeInsets.all(24),
                     child: Column(

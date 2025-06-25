@@ -63,50 +63,62 @@ class _PreferencesScreenfoodState extends State<PreferencesScreenfood> {
             ),
           ),
 
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
-            child: Center(
-              child: Chip(
-                labelPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                avatar: Icon(Icons.access_time, color: Colors.grey, size: 20),
-                label: Text(
-                  "Almost done!",
-                  style: TextStyle(color: Colors.black87),
-                ),
-                backgroundColor: Color(0xFFF1F3F6),
-                shape: StadiumBorder(),
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                LinearProgressIndicator(
-                  value: 0.5,
-                  minHeight: 7,
-                  backgroundColor: Colors.grey[300],
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlue),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Text("Start", style: TextStyle(fontSize: 14)),
-                    Text("Finish", style: TextStyle(fontSize: 14)),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+                    child: Center(
+                      child: Chip(
+                        labelPadding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        avatar: Icon(
+                          Icons.access_time,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
+                        label: Text(
+                          "Almost done!",
+                          style: TextStyle(color: Colors.black87),
+                        ),
+                        backgroundColor: Color(0xFFF1F3F6),
+                        shape: StadiumBorder(),
+                      ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 10,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        LinearProgressIndicator(
+                          value: 0.5,
+                          minHeight: 7,
+                          backgroundColor: Colors.grey[300],
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.lightBlue,
+                          ),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Text("Start", style: TextStyle(fontSize: 14)),
+                            Text("Finish", style: TextStyle(fontSize: 14)),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
                   Padding(
                     padding: EdgeInsets.all(24),
                     child: Column(
