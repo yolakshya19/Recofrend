@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:recofrend/screens/preferences_screen_ott.dart';
-import 'package:recofrend/screens/profile_details_screen.dart';
+// import 'package:recofrend/screens/preferences_screen_ott.dart';
+// import 'package:recofrend/screens/profile_details_screen.dart';
+import 'package:recofrend/utils/progress_data.dart';
+import 'package:recofrend/utils/preference_navigator.dart';
 
 class InterestsScreen extends StatefulWidget {
   const InterestsScreen({super.key});
@@ -18,6 +20,12 @@ class _InterestsScreenState extends State<InterestsScreen> {
   ];
 
   Set<String> selected = {};
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ProgressController().updateCurrentStep(2);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +83,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 LinearProgressIndicator(
-                  value: 0.4,
+                  value: ProgressController().progress.progressValue,
                   minHeight: 7,
                   backgroundColor: Colors.grey[300],
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlue),
@@ -94,107 +102,109 @@ class _InterestsScreenState extends State<InterestsScreen> {
           ),
 
           Expanded(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "What are you interested in?",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(24),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "What are you interested in?",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "Select categories you'd like to get recommendations for:",
-                      ),
-                    ],
+                        SizedBox(height: 10),
+                        Text(
+                          "Select categories you'd like to get recommendations for:",
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Wrap(
-                    spacing: 25,
-                    runSpacing: 22,
-                    children: interests.map((item) {
-                      final isSelected = selected.contains(item['label']);
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (isSelected) {
-                              selected.remove(item['label']);
-                            } else {
-                              selected.add(item['label']);
-                            }
-                          });
-                        },
-                        child: Container(
-                          width: 160,
-                          padding: EdgeInsets.symmetric(vertical: 20),
-                          decoration: BoxDecoration(
-                            border: Border.all(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Wrap(
+                      spacing: 25,
+                      runSpacing: 22,
+                      children: interests.map((item) {
+                        final isSelected = selected.contains(item['label']);
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (isSelected) {
+                                selected.remove(item['label']);
+                              } else {
+                                selected.add(item['label']);
+                              }
+                            });
+                          },
+                          child: Container(
+                            width: 160,
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: isSelected
+                                    ? Colors.lightBlueAccent
+                                    : Colors.grey.shade300,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade200,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2),
+                                ),
+                              ],
                               color: isSelected
-                                  ? Colors.lightBlueAccent
-                                  : Colors.grey.shade300,
+                                  ? const Color.fromARGB(150, 170, 235, 243)
+                                  : Colors.white,
                             ),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.shade200,
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
-                              ),
-                            ],
-                            color: isSelected
-                                ? const Color.fromARGB(150, 170, 235, 243)
-                                : Colors.white,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                item['icon'],
-                                size: 30,
-                                color: Colors.black87,
-                              ),
-                              const SizedBox(height: 12),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Checkbox(
-                                    value: isSelected,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        if (val == true) {
-                                          selected.add(item['label']);
-                                        } else {
-                                          selected.remove(item['label']);
-                                        }
-                                      });
-                                    },
-                                  ),
-                                  Text(
-                                    item['label'],
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  item['icon'],
+                                  size: 30,
+                                  color: Colors.black87,
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Checkbox(
+                                      value: isSelected,
+                                      onChanged: (val) {
+                                        setState(() {
+                                          if (val == true) {
+                                            selected.add(item['label']);
+                                          } else {
+                                            selected.remove(item['label']);
+                                          }
+                                        });
+                                      },
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    Text(
+                                      item['label'],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    }).toList(),
+                        );
+                      }).toList(),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
 
@@ -204,14 +214,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ElevatedButton(
-                  onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileDetailsScreen(),
-                      ),
-                    ),
-                  },
+                  onPressed: () => {Navigator.pop(context)},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 246, 240, 240),
                     foregroundColor: Colors.black,
@@ -223,13 +226,35 @@ class _InterestsScreenState extends State<InterestsScreen> {
                   child: Text('Back'),
                 ),
                 ElevatedButton(
-                  onPressed: () => {
+                  onPressed: () {
+                    final selectedInterests = selected.toList();
+
+                    if (selectedInterests.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Please select at least one interest"),
+                        ),
+                      );
+                      return;
+                    }
+
+                    final preferenceScreens = selectedInterests.length;
+                    final totalSteps =
+                        2 +
+                        preferenceScreens +
+                        1; // profile + interest + preferences + review
+
+                    ProgressController().updateTotalSteps(totalSteps);
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const PreferencesScreenott(),
+                        builder: (context) => PreferenceNavigator(
+                          selectedInterests: selectedInterests,
+                          currentStep: 3,
+                        ),
                       ),
-                    ),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -239,7 +264,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text('Next'),
+                  child: Text("Next"),
                 ),
               ],
             ),

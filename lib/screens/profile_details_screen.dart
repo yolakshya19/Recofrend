@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+// ignore: unused_import
 import 'package:permission_handler/permission_handler.dart';
 import 'interests_screen.dart';
 import '../utils/progress_data.dart';
@@ -22,12 +23,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   final TextEditingController _cityController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    ProgressController().setProgress(
-      currentStep: 1,
-      totalSteps: 6,
-    ); // We'll update totalSteps later
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ProgressController().updateCurrentStep(1);
   }
 
   File? _selectedImage;

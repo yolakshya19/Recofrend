@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:recofrend/screens/interests_screen.dart';
-import 'package:recofrend/screens/preferences_screenBOOKS.dart';
+// import 'package:recofrend/screens/interests_screen.dart';
+// import 'package:recofrend/screens/preferences_screenBOOKS.dart';
+import 'package:recofrend/utils/progress_data.dart';
 
 class PreferencesScreengoout extends StatefulWidget {
-  const PreferencesScreengoout({super.key});
-
+  final VoidCallback onNext;
+  final int currentStep;
+  const PreferencesScreengoout({
+    super.key,
+    required this.onNext,
+    required this.currentStep,
+  });
   @override
   State<PreferencesScreengoout> createState() => _PreferencesScreengooutState();
 }
 
 class _PreferencesScreengooutState extends State<PreferencesScreengoout> {
+  @override
+  void initState() {
+    super.initState();
+    final current = ProgressController().progress.currentStep;
+    if (widget.currentStep > current) {
+      ProgressController().updateCurrentStep(widget.currentStep);
+    }
+    print(
+      "Preference screen init: currentStep=${widget.currentStep}, progress=${ProgressController().progress.currentStep}",
+    );
+  }
+
   final List<String> interests = [
     'Cafes',
     'Restaurants',
@@ -99,7 +117,7 @@ class _PreferencesScreengooutState extends State<PreferencesScreengoout> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         LinearProgressIndicator(
-                          value: 0.5,
+                          value: ProgressController().progress.progressValue,
                           minHeight: 7,
                           backgroundColor: Colors.grey[300],
                           valueColor: AlwaysStoppedAnimation<Color>(
@@ -139,7 +157,7 @@ class _PreferencesScreengooutState extends State<PreferencesScreengoout> {
                             style: TextStyle(color: Colors.black),
                             children: [
                               TextSpan(
-                                text: "0/3 recommendations",
+                                text: "${selected.length}/3 recommendations",
                                 style: TextStyle(
                                   color: Colors.purpleAccent,
                                   fontWeight: FontWeight.bold,
@@ -181,6 +199,7 @@ class _PreferencesScreengooutState extends State<PreferencesScreengoout> {
                                 color: isSelected
                                     ? Colors.lightBlueAccent
                                     : Colors.grey.shade300,
+                                width: 2.5,
                               ),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
@@ -211,61 +230,56 @@ class _PreferencesScreengooutState extends State<PreferencesScreengoout> {
                   ),
 
                   const SizedBox(height: 40),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // const SizedBox(height: ),
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(154, 253, 254, 177),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: const Color.fromARGB(255, 237, 224, 167),
-                              width: 1.5,
-                            ),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Image(
-                                image: AssetImage('assets/warning.png'),
-                                width: 23,
-                                height: 23,
+
+                  if (selected.length < 3)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // const SizedBox(height: ),
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(154, 253, 254, 177),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: const Color.fromARGB(255, 237, 224, 167),
+                                width: 1.5,
                               ),
-                              SizedBox(width: 5),
-                              Expanded(
-                                child: Text(
-                                  'Please select atleast 3 interests to continue!',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 15,
-                                    color: Color.fromARGB(255, 255, 170, 0),
+                            ),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Image(
+                                  image: AssetImage('assets/warning.png'),
+                                  width: 23,
+                                  height: 23,
+                                ),
+                                SizedBox(width: 5),
+                                Expanded(
+                                  child: Text(
+                                    'Please select atleast 3 interests to continue!',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                      color: Color.fromARGB(255, 255, 170, 0),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
                   Padding(
                     padding: EdgeInsets.all(24),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         ElevatedButton(
-                          onPressed: () => {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const InterestsScreen(),
-                              ),
-                            ),
-                          },
+                          onPressed: () => {Navigator.pop(context)},
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color.fromARGB(
                               255,
@@ -282,14 +296,19 @@ class _PreferencesScreengooutState extends State<PreferencesScreengoout> {
                           child: Text('Back'),
                         ),
                         ElevatedButton(
-                          onPressed: () => {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const PreferencesScreenbooks(),
-                              ),
-                            ),
+                          onPressed: () {
+                            if (selected.length < 3) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    "Please select at least 3 interests",
+                                  ),
+                                ),
+                              );
+                              return;
+                            }
+
+                            widget.onNext();
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,
