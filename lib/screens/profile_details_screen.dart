@@ -1,6 +1,13 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'interests_screen.dart';
+import '../utils/progress_data.dart';
 
 class ProfileDetailsScreen extends StatefulWidget {
   const ProfileDetailsScreen({super.key});
@@ -10,7 +17,95 @@ class ProfileDetailsScreen extends StatefulWidget {
 }
 
 class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
-  String? selectedValue;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    ProgressController().setProgress(
+      currentStep: 1,
+      totalSteps: 6,
+    ); // We'll update totalSteps later
+  }
+
+  File? _selectedImage;
+  Uint8List? _webImage;
+
+  Future<void> _fetchLocationAndCity() async {
+    try {
+      print("Checking location service...");
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        print("Location services are disabled.");
+        _showSnack("Location services are disabled");
+        return;
+      }
+
+      print("Checking permission...");
+      LocationPermission permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        print("Requesting permission...");
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          print("Location permission denied.");
+          _showSnack("Location permission denied");
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        print("Location permission permanently denied.");
+        _showSnack("Permission permanently denied");
+        return;
+      }
+
+      print("Getting position...");
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      print("Got position: ${position.latitude}, ${position.longitude}");
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      print("Placemarks: $placemarks");
+
+      if (placemarks.isNotEmpty) {
+        final place = placemarks[0];
+        String? city =
+            place.locality ??
+            place.subAdministrativeArea ??
+            place.administrativeArea;
+        print("Detected city: $city");
+        setState(() {
+          _cityController.text = city ?? '';
+        });
+      } else {
+        print("No placemarks found.");
+        _showSnack("Failed to get city name");
+      }
+    } catch (e) {
+      print("Error occurred: $e");
+      _showSnack("Failed to get location");
+    }
+  }
+
+  void _showSnack(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _cityController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +173,9 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         LinearProgressIndicator(
-                          value: 0.3,
+                          value:
+                              ProgressController().progress.currentStep /
+                              ProgressController().progress.totalSteps,
                           minHeight: 7,
                           backgroundColor: Colors.grey[300],
                           valueColor: AlwaysStoppedAnimation<Color>(
@@ -125,8 +222,14 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                     ),
                     child: CircleAvatar(
                       radius: 45,
-                      backgroundColor: Colors.grey,
-                      child: Icon(Icons.person, size: 40, color: Colors.white),
+                      backgroundImage: kIsWeb && _webImage != null
+                          ? MemoryImage(_webImage!)
+                          : (_selectedImage != null
+                                ? FileImage(_selectedImage!)
+                                : null),
+                      child: (_selectedImage == null && _webImage == null)
+                          ? Icon(Icons.person, size: 40, color: Colors.white)
+                          : null,
                     ),
                   ),
 
@@ -136,7 +239,26 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final picker = ImagePicker();
+                          final picked = await picker.pickImage(
+                            source: ImageSource.gallery,
+                          );
+
+                          if (picked != null) {
+                            if (kIsWeb) {
+                              final bytes = await picked.readAsBytes();
+                              setState(() {
+                                _webImage = bytes;
+                              });
+                            } else {
+                              setState(() {
+                                _selectedImage = File(picked.path);
+                              });
+                            }
+                          }
+                        },
+
                         icon: Icon(Icons.upload),
                         label: Text("Upload Photo"),
                         style: ElevatedButton.styleFrom(
@@ -151,7 +273,11 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                       ),
                       const SizedBox(width: 12),
                       ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Coming Soon')),
+                          );
+                        },
                         icon: Icon(Icons.person),
                         label: Text("Generate Avatar"),
                         style: ElevatedButton.styleFrom(
@@ -168,26 +294,36 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                   ),
 
                   const SizedBox(height: 24),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          "Display Name*",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                  Form(
+                    key: _formKey,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Display Name*",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: "How should we call you?",
-                            border: OutlineInputBorder(),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _nameController,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Display name is required';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: "How should we call you?",
+                              border: OutlineInputBorder(),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
 
@@ -206,6 +342,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                         ),
                         const SizedBox(height: 8),
                         TextField(
+                          keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             hintText: "Your email address",
                             border: OutlineInputBorder(),
@@ -271,7 +408,6 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
                         const SizedBox(height: 8),
                         DropdownButtonFormField<String>(
-                          value: selectedValue,
                           hint: Text("Select your sex"),
                           decoration: InputDecoration(
                             border: OutlineInputBorder(),
@@ -293,11 +429,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                                   child: Text(value),
                                 );
                               }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedValue = newValue!;
-                            });
-                          },
+                          onChanged: (newValue) {},
                         ),
                       ],
                     ),
@@ -327,6 +459,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                             Expanded(
                               flex: 5,
                               child: TextField(
+                                controller: _cityController,
                                 decoration: InputDecoration(
                                   hintText: "Your city",
                                   border: OutlineInputBorder(),
@@ -337,7 +470,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                             Expanded(
                               flex: 1,
                               child: ElevatedButton.icon(
-                                onPressed: () {},
+                                onPressed: _fetchLocationAndCity,
                                 label: Icon(Icons.location_on_outlined),
                                 style: ElevatedButton.styleFrom(
                                   padding: EdgeInsets.symmetric(vertical: 18),
@@ -426,25 +559,27 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
                   const SizedBox(height: 50),
                   Padding(
-                    padding: EdgeInsetsGeometry.fromLTRB(0, 0, 20, 25),
+                    padding: EdgeInsets.fromLTRB(0, 0, 20, 25),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
-                          onPressed: () => {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const InterestsScreen(),
-                              ),
-                            ),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const InterestsScreen(),
+                                ),
+                              );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,
                             foregroundColor: Colors.white,
                             elevation: 5,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(8),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           child: Text('Next'),

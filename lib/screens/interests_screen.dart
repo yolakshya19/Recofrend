@@ -217,7 +217,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                     foregroundColor: Colors.black,
                     elevation: 5,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(8),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   child: Text('Back'),
@@ -236,7 +236,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                     foregroundColor: Colors.white,
                     elevation: 5,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadiusGeometry.circular(8),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   child: Text('Next'),

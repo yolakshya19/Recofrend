@@ -381,7 +381,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             foregroundColor: Colors.black,
                             elevation: 5,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(8),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           child: Text('Back'),

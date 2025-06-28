@@ -106,8 +106,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               PinCodeTextField(
                 appContext: context,
                 length: 6,
-                autoFocus: false,
-                obscureText: false,
+                // autoFocus: false,
+                // obscureText: false,
                 animationType: AnimationType.fade,
                 pinTheme: PinTheme(
                   shape: PinCodeFieldShape.underline,
