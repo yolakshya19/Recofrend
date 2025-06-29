@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:recofrend/utils/progress_data.dart';
 
 class PreferencesScreenfood extends StatefulWidget {
-  final VoidCallback onNext;
+  final void Function(String interest, List<String> selectedPreferences) onNext;
   final int currentStep;
   const PreferencesScreenfood({
     super.key,
@@ -309,8 +309,7 @@ class _PreferencesScreenfoodState extends State<PreferencesScreenfood> {
                               return;
                             }
 
-                            widget
-                                .onNext(); // <-- go to next preference screen or review screen
+                            widget.onNext('Food', selected.toList());
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,

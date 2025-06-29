@@ -7,11 +7,11 @@ import 'package:recofrend/screens/preferences_screen_go_out.dart';
 import 'package:recofrend/screens/review_screen.dart'; // After all preferences
 
 class PreferenceNavigator extends StatefulWidget {
-  final List<String> selectedInterests;
   final int currentStep;
 
-  const PreferenceNavigator({
-    super.key,
+  final List<Map<String, dynamic>> selectedInterests;
+
+  PreferenceNavigator({
     required this.selectedInterests,
     required this.currentStep,
   });
@@ -21,6 +21,8 @@ class PreferenceNavigator extends StatefulWidget {
 }
 
 class _PreferenceNavigatorState extends State<PreferenceNavigator> {
+  final Map<String, List<String>> collectedPreferences = {};
+
   int _currentIndex = 0;
 
   @override
@@ -38,7 +40,9 @@ class _PreferenceNavigatorState extends State<PreferenceNavigator> {
     progress.updateCurrentStep(widget.currentStep);
   }
 
-  void _goToNextScreen() {
+  void _goToNextScreen(String interest, List<String> selectedPrefs) {
+    collectedPreferences[interest] = selectedPrefs;
+
     if (_currentIndex < widget.selectedInterests.length - 1) {
       setState(() {
         _currentIndex++;
@@ -47,9 +51,15 @@ class _PreferenceNavigatorState extends State<PreferenceNavigator> {
       ProgressController().updateCurrentStep(
         ProgressController().progress.totalSteps - 1,
       );
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const ReviewScreen()),
+        MaterialPageRoute(
+          builder: (_) => ReviewScreen(
+            selectedInterests: widget.selectedInterests,
+            selectedPreferences: collectedPreferences,
+          ),
+        ),
       );
     }
   }
@@ -85,7 +95,7 @@ class _PreferenceNavigatorState extends State<PreferenceNavigator> {
 
   @override
   Widget build(BuildContext context) {
-    String currentInterest = widget.selectedInterests[_currentIndex];
+    String currentInterest = widget.selectedInterests[_currentIndex]['label'];
     return _getCurrentPreferenceScreen(currentInterest);
   }
 }

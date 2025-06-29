@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:recofrend/utils/progress_data.dart';
 
 class PreferencesScreenott extends StatefulWidget {
-  final VoidCallback onNext;
+  final void Function(String interest, List<String> selectedPreferences) onNext;
   final int currentStep;
   const PreferencesScreenott({
     super.key,
@@ -310,8 +310,10 @@ class _PreferencesScreenottState extends State<PreferencesScreenott> {
                               return;
                             }
 
-                            widget
-                                .onNext(); // <-- go to next preference screen or review screen
+                            widget.onNext(
+                              'OTT',
+                              selected.toList(),
+                            ); // <-- go to next preference screen or review screen
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,

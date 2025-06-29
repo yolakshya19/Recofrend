@@ -227,7 +227,9 @@ class _InterestsScreenState extends State<InterestsScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    final selectedInterests = selected.toList();
+                    final selectedInterests = interests
+                        .where((item) => selected.contains(item['label']))
+                        .toList();
 
                     if (selectedInterests.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(

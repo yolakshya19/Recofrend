@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:recofrend/utils/progress_data.dart';
 
 class PreferencesScreengoout extends StatefulWidget {
-  final VoidCallback onNext;
+  final void Function(String interest, List<String> selectedPreferences) onNext;
   final int currentStep;
   const PreferencesScreengoout({
     super.key,
@@ -308,7 +308,7 @@ class _PreferencesScreengooutState extends State<PreferencesScreengoout> {
                               return;
                             }
 
-                            widget.onNext();
+                            widget.onNext('Go out', selected.toList());
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,

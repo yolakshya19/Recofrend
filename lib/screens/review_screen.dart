@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
 
 class ReviewScreen extends StatefulWidget {
-  const ReviewScreen({super.key});
+  final List<Map<String, dynamic>> selectedInterests;
+  final Map<String, List<String>> selectedPreferences;
+
+  const ReviewScreen({
+    super.key,
+    required this.selectedInterests,
+    required this.selectedPreferences,
+  });
 
   @override
   State<ReviewScreen> createState() => _ReviewScreenState();
 }
 
 class _ReviewScreenState extends State<ReviewScreen> {
-  final List<Map<String, dynamic>> selectedInterests = [
-    {'icon': Icons.movie, 'label': 'OTT'},
-    {'icon': Icons.restaurant, 'label': 'Food'},
-    {'icon': Icons.book, 'label': 'Books'},
-  ];
-
-  final Map<String, List<String>> selectedPreferences = {
-    "OTT": ["Sci-Fi", "Drama"],
-    "Food": ["Indian", "Chinese"],
-    "Books": ["Fantasy", "Sci-fi"],
-  };
-
   final List<Color> pastelColors = [
     Colors.purple.shade200,
     Colors.orange.shade200,
@@ -223,34 +218,39 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             child: Wrap(
                               spacing: 10,
                               runSpacing: 10,
-                              children: selectedInterests.asMap().entries.map((
-                                entry,
-                              ) {
-                                int index = entry.key;
-                                var item = entry.value;
-                                Color chipColor =
-                                    pastelColors[index % pastelColors.length];
+                              children: widget.selectedInterests
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                    int index = entry.key;
+                                    var item = entry.value;
+                                    Color chipColor =
+                                        pastelColors[index %
+                                            pastelColors.length];
 
-                                return Chip(
-                                  avatar: Icon(
-                                    item['icon'],
-                                    size: 20,
-                                    color: Colors.black,
-                                  ),
-                                  label: Text(
-                                    item['label'],
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  backgroundColor: chipColor.withOpacity(0.8),
-                                  shape: StadiumBorder(
-                                    side: BorderSide(color: chipColor),
-                                  ),
-                                );
-                              }).toList(),
+                                    return Chip(
+                                      avatar: Icon(
+                                        item['icon'],
+                                        size: 20,
+                                        color: Colors.black,
+                                      ),
+                                      label: Text(
+                                        item['label'],
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      backgroundColor: chipColor.withOpacity(
+                                        0.8,
+                                      ),
+                                      shape: StadiumBorder(
+                                        side: BorderSide(color: chipColor),
+                                      ),
+                                    );
+                                  })
+                                  .toList(),
                             ),
                           ),
                           const SizedBox(height: 15),
@@ -292,13 +292,15 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             ],
                           ),
                           const SizedBox(height: 5),
-                          ...selectedInterests.asMap().entries.map((entry) {
+                          ...widget.selectedInterests.asMap().entries.map((
+                            entry,
+                          ) {
                             int index = entry.key;
                             var item = entry.value;
                             String interest = item['label'];
                             IconData iconData = item['icon'];
                             List<String> prefs =
-                                selectedPreferences[interest] ?? [];
+                                widget.selectedPreferences[interest] ?? [];
                             Color chipColor =
                                 pastelColors[index % pastelColors.length];
 

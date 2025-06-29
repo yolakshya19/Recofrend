@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:recofrend/utils/progress_data.dart';
 
 class PreferencesScreenbooks extends StatefulWidget {
-  final VoidCallback onNext;
+  final void Function(String interest, List<String> selectedPreferences) onNext;
   final int currentStep;
   const PreferencesScreenbooks({
     super.key,
@@ -309,7 +309,7 @@ class _PreferencesScreenbooksState extends State<PreferencesScreenbooks> {
                               return;
                             }
 
-                            widget.onNext();
+                            widget.onNext("Books", selected.toList());
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.black,

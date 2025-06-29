@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
@@ -28,42 +29,56 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     ProgressController().updateCurrentStep(1);
   }
 
+  bool _isLoadingLocation = false;
   File? _selectedImage;
   Uint8List? _webImage;
 
   Future<void> _fetchLocationAndCity() async {
+    setState(() {
+      _isLoadingLocation = true;
+    });
+
     try {
       print("Checking location service...");
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         print("Location services are disabled.");
-        _showSnack("Location services are disabled");
+        _showSnack("Please enable location services in device settings");
         return;
       }
 
       print("Checking permission...");
       LocationPermission permission = await Geolocator.checkPermission();
+      print("Current permission status: $permission");
 
       if (permission == LocationPermission.denied) {
         print("Requesting permission...");
         permission = await Geolocator.requestPermission();
+        print("Permission after request: $permission");
+
         if (permission == LocationPermission.denied) {
           print("Location permission denied.");
-          _showSnack("Location permission denied");
+          _showSnack(
+            "Location permission is required. Please grant permission.",
+          );
           return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
         print("Location permission permanently denied.");
-        _showSnack("Permission permanently denied");
+        _showSnack(
+          "Location permission permanently denied. Please enable in settings.",
+        );
         return;
       }
 
       print("Getting position...");
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        desiredAccuracy: LocationAccuracy.medium, // Try medium instead of high
+        timeLimit: Duration(seconds: 20),
       );
+
       print("Got position: ${position.latitude}, ${position.longitude}");
 
       List<Placemark> placemarks = await placemarkFromCoordinates(
@@ -71,25 +86,34 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
         position.longitude,
       );
 
-      print("Placemarks: $placemarks");
-
       if (placemarks.isNotEmpty) {
         final place = placemarks[0];
         String? city =
             place.locality ??
             place.subAdministrativeArea ??
             place.administrativeArea;
-        print("Detected city: $city");
+
         setState(() {
-          _cityController.text = city ?? '';
+          _cityController.text = city ?? 'Unknown';
         });
+        _showSnack("Location detected successfully!");
       } else {
-        print("No placemarks found.");
-        _showSnack("Failed to get city name");
+        _showSnack("Could not determine city name");
       }
+    } on LocationServiceDisabledException {
+      _showSnack("Location services are disabled. Please enable them.");
+    } on PermissionDeniedException {
+      _showSnack("Location permission denied. Please grant permission.");
+    } on TimeoutException {
+      _showSnack("Location request timed out. Please try again.");
     } catch (e) {
-      print("Error occurred: $e");
-      _showSnack("Failed to get location");
+      print("Detailed error: $e");
+      print("Error type: ${e.runtimeType}");
+      _showSnack("Location error: ${e.toString()}");
+    } finally {
+      setState(() {
+        _isLoadingLocation = false;
+      });
     }
   }
 
@@ -468,8 +492,22 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                             Expanded(
                               flex: 1,
                               child: ElevatedButton.icon(
-                                onPressed: _fetchLocationAndCity,
-                                label: Icon(Icons.location_on_outlined),
+                                onPressed: _isLoadingLocation
+                                    ? null
+                                    : _fetchLocationAndCity,
+                                label: _isLoadingLocation
+                                    ? SizedBox(
+                                        width: 20,
+                                        height: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.black,
+                                              ),
+                                        ),
+                                      )
+                                    : Icon(Icons.location_on_outlined),
                                 style: ElevatedButton.styleFrom(
                                   padding: EdgeInsets.symmetric(vertical: 18),
                                   backgroundColor: Colors.white,
