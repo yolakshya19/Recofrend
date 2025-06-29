@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
+// import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'interests_screen.dart';
 import '../utils/progress_data.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ProfileDetailsScreen extends StatefulWidget {
   const ProfileDetailsScreen({super.key});
@@ -33,6 +35,41 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   File? _selectedImage;
   Uint8List? _webImage;
 
+  Future<String?> getCityFromGoogleAPI(double lat, double lng) async {
+    const apiKey = 'AIzaSyBBRhGhiWrdklJ_QjTvwQLw4U9q_nAU5PQ';
+
+    final url = Uri.parse(
+      'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey',
+    );
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      if (data['status'] == 'OK') {
+        final results = data['results'];
+        if (results != null && results.isNotEmpty) {
+          for (var result in results) {
+            for (var component in result['address_components']) {
+              final types = List<String>.from(component['types']);
+              if (types.contains('locality') ||
+                  types.contains('administrative_area_level_2') ||
+                  types.contains('administrative_area_level_1')) {
+                return component['long_name'];
+              }
+            }
+          }
+        }
+      } else {
+        print("Google API error: ${data['status']}");
+      }
+    } else {
+      print("Failed to fetch from API. Code: ${response.statusCode}");
+    }
+
+    return null;
+  }
+
   Future<void> _fetchLocationAndCity() async {
     setState(() {
       _isLoadingLocation = true;
@@ -42,78 +79,67 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
       print("Checking location service...");
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        print("Location services are disabled.");
         _showSnack("Please enable location services in device settings");
         return;
       }
 
       print("Checking permission...");
       LocationPermission permission = await Geolocator.checkPermission();
-      print("Current permission status: $permission");
 
       if (permission == LocationPermission.denied) {
-        print("Requesting permission...");
         permission = await Geolocator.requestPermission();
-        print("Permission after request: $permission");
-
         if (permission == LocationPermission.denied) {
-          print("Location permission denied.");
-          _showSnack(
-            "Location permission is required. Please grant permission.",
-          );
+          _showSnack("Location permission is required. Please grant it.");
           return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
-        print("Location permission permanently denied.");
         _showSnack(
-          "Location permission permanently denied. Please enable in settings.",
+          "Location permission permanently denied. Enable it in settings.",
         );
         return;
       }
 
       print("Getting position...");
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.medium, // Try medium instead of high
-        timeLimit: Duration(seconds: 20),
+        desiredAccuracy: LocationAccuracy.medium,
+        timeLimit: const Duration(seconds: 20),
       );
 
-      print("Got position: ${position.latitude}, ${position.longitude}");
+      print("Got location: ${position.latitude}, ${position.longitude}");
 
-      List<Placemark> placemarks = await placemarkFromCoordinates(
+      print("Calling Google Maps Geocoding API...");
+      String? city = await getCityFromGoogleAPI(
         position.latitude,
         position.longitude,
       );
 
-      if (placemarks.isNotEmpty) {
-        final place = placemarks[0];
-        String? city =
-            place.locality ??
-            place.subAdministrativeArea ??
-            place.administrativeArea;
-
-        setState(() {
-          _cityController.text = city ?? 'Unknown';
-        });
-        _showSnack("Location detected successfully!");
-      } else {
-        _showSnack("Could not determine city name");
+      if (mounted) {
+        if (city != null) {
+          setState(() {
+            _cityController.text = city;
+          });
+          _showSnack("Location detected: $city");
+        } else {
+          _showSnack("Location found, but city name unavailable.");
+        }
       }
-    } on LocationServiceDisabledException {
-      _showSnack("Location services are disabled. Please enable them.");
-    } on PermissionDeniedException {
-      _showSnack("Location permission denied. Please grant permission.");
     } on TimeoutException {
-      _showSnack("Location request timed out. Please try again.");
-    } catch (e) {
-      print("Detailed error: $e");
-      print("Error type: ${e.runtimeType}");
-      _showSnack("Location error: ${e.toString()}");
+      _showSnack("Location request timed out. Try again.");
+    } on LocationServiceDisabledException {
+      _showSnack("Location services are disabled.");
+    } catch (e, stack) {
+      print("Error fetching location: $e");
+      print("Stack: $stack");
+
+      _showSnack("Error fetching location. Try manually.");
     } finally {
-      setState(() {
-        _isLoadingLocation = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoadingLocation = false;
+        });
+      }
     }
   }
 
