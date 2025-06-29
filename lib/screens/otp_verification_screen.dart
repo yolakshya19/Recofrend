@@ -18,6 +18,7 @@ class OtpVerificationScreen extends StatefulWidget {
 class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   String otpCode = '';
   bool showValidationMsg = false;
+  TextEditingController otpController = TextEditingController();
 
   @override
   void initState() {
@@ -62,15 +63,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 55, 184, 231),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: const Icon(Icons.person, size: 48, color: Colors.white),
+              Image(
+                image: AssetImage('assets/logo.jpg'),
+                height: 80,
+                width: 80,
               ),
-
               const SizedBox(height: 20),
 
               Text(
@@ -104,6 +101,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               const SizedBox(height: 20),
 
               PinCodeTextField(
+                controller: otpController,
                 appContext: context,
                 length: 6,
                 // autoFocus: false,
@@ -213,6 +211,11 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () {
+                    otpController.clear();
+                    setState(() {
+                      otpCode = '';
+                      showValidationMsg = false;
+                    });
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('OTP resent to ${widget.phonenumber}'),

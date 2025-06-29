@@ -71,15 +71,12 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 55, 184, 231),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: const Icon(Icons.person, size: 48, color: Colors.white),
+              Image(
+                image: AssetImage('assets/logo.jpg'),
+                height: 80,
+                width: 80,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
 
               const Text(
                 "Welcome to Recofrend",
