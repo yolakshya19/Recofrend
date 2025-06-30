@@ -19,7 +19,7 @@ class ProgressController {
 
   ProgressData _progress = ProgressData(
     currentStep: 1,
-    totalSteps: 6, // default fallback
+    totalSteps: 6,
   );
 
   ProgressData get progress => _progress;
@@ -32,7 +32,6 @@ class ProgressController {
   }
 
   void updateCurrentStep(int step) {
-    // Only update if it's an advancement and not beyond totalSteps
     if (step > _progress.currentStep && step <= _progress.totalSteps) {
       _progress.currentStep = step;
     }

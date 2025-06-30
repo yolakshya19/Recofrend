@@ -128,8 +128,8 @@ class _InterestsScreenState extends State<InterestsScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Wrap(
-                      spacing: 25,
-                      runSpacing: 22,
+                      spacing: 20,
+                      runSpacing: 20,
                       children: interests.map((item) {
                         final isSelected = selected.contains(item['label']);
                         return GestureDetector(
@@ -143,7 +143,7 @@ class _InterestsScreenState extends State<InterestsScreen> {
                             });
                           },
                           child: Container(
-                            width: 160,
+                            width: 155,
                             padding: EdgeInsets.symmetric(vertical: 20),
                             decoration: BoxDecoration(
                               border: Border.all(

@@ -122,12 +122,13 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:recofrend/screens/splash_screen.dart';
 // import 'package:recofrend/screens/interests_screen.dart';
 // import 'package:recofrend/screens/review_screen.dart';
-import 'screens/login_screen.dart';
+// import 'screens/login_screen.dart';
 
 void main() {
   runApp(
-    const MaterialApp(debugShowCheckedModeBanner: false, home: LoginScreen()),
+    const MaterialApp(debugShowCheckedModeBanner: false, home: SplashScreen()),
   );
 }

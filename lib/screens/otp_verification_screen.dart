@@ -63,10 +63,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image(
-                image: AssetImage('assets/logo.jpg'),
-                height: 80,
-                width: 80,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(20), // adjust for roundness
+                child: Image.asset(
+                  'assets/logo.jpg',
+                  height: 80,
+                  width: 80,
+                  fit: BoxFit.cover,
+                ),
               ),
               const SizedBox(height: 20),
 
