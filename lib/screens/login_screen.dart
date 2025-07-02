@@ -33,9 +33,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!mounted) return; // ✅ Add this line
 
-    setState(() {
-      isSendingOtp = false;
-    });
+    // setState(() {
+    //   isSendingOtp = false;
+    // });
 
     Navigator.push(
       context,

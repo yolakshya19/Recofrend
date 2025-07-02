@@ -19,7 +19,34 @@ class OtpVerificationScreen extends StatefulWidget {
 class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   String otpCode = '';
   bool showValidationMsg = false;
+  bool isVerifyingOtp = false;
   TextEditingController otpController = TextEditingController();
+
+  void verifyOtp() async {
+    setState(() {
+      isVerifyingOtp = true;
+    });
+
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (!mounted) return; // ✅ Add this line
+
+    // setState(() {
+    //   isVerifyingOtp = false;
+    // });
+    final firstDigit = widget.phonenumber[0];
+    if (int.parse(firstDigit) % 2 == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileDetailsScreen()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -155,43 +182,32 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 child: ElevatedButton(
                   onPressed: otpCode.length == 6
                       ? () {
-                          final firstDigit = widget.phonenumber[0];
-                          if (int.parse(firstDigit) % 2 == 0) {
-                            // New user → go to Profile screen
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const ProfileDetailsScreen(),
-                              ),
-                            );
-                          } else {
-                            // Old user → go to Home screen
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const HomeScreen(),
-                              ),
-                            );
-                          }
+                          verifyOtp();
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF00AEEF),
+                    backgroundColor: isVerifyingOtp
+                        ? Colors.grey
+                        : const Color(0xFF00AEEF),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text(
-                    "Verify OTP",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: otpCode.length == 6
-                          ? Colors.white
-                          : const Color.fromARGB(255, 133, 131, 131),
-                    ),
-                  ),
+                  child: isVerifyingOtp
+                      ? const Text(
+                          "Verifying OTP.....",
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        )
+                      : Text(
+                          "Verify OTP",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: otpCode.length == 6
+                                ? Colors.white
+                                : const Color.fromARGB(255, 133, 131, 131),
+                          ),
+                        ),
                 ),
               ),
 
