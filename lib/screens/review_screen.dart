@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recofrend/screens/home/home_screen.dart';
 
 class ReviewScreen extends StatefulWidget {
   final List<Map<String, dynamic>> selectedInterests;
@@ -410,12 +411,17 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             ],
                           ),
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const HomeScreen(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors
-                                  .transparent, // Make button bg transparent
-                              shadowColor:
-                                  Colors.transparent, // Remove shadow if needed
+                              backgroundColor: Colors.transparent,
+                              shadowColor: Colors.transparent,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),

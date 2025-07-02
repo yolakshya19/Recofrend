@@ -493,7 +493,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                             Icon(Icons.location_on_outlined),
                             const SizedBox(width: 5),
                             const Text(
-                              "City (optional)",
+                              "Location (optional)",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -509,7 +509,7 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
                               child: TextField(
                                 controller: _cityController,
                                 decoration: InputDecoration(
-                                  hintText: "Your city",
+                                  hintText: "Your Location",
                                   border: OutlineInputBorder(),
                                 ),
                               ),

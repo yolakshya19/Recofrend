@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             AnimatedOpacity(
               opacity: showThumb ? 1 : 0,
-              duration: Duration(milliseconds: 1000),
+              duration: Duration(milliseconds: 900),
               child: Icon(
                 Icons.thumb_up_alt_rounded,
                 size: 100,
@@ -71,7 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     color: Colors.white.withOpacity(0.4),
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(21),
                     child: Image.asset(
                       'assets/logo.jpg',
                       height: 100,

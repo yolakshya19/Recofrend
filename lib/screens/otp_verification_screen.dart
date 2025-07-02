@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:recofrend/screens/home/home_screen.dart';
 import 'package:recofrend/screens/profile_details_screen.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
@@ -64,7 +65,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(20), // adjust for roundness
+                borderRadius: BorderRadius.circular(21), // adjust for roundness
                 child: Image.asset(
                   'assets/logo.jpg',
                   height: 80,
@@ -153,14 +154,26 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: otpCode.length == 6
-                      ? () => {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ProfileDetailsScreen(),
-                            ),
-                          ),
+                      ? () {
+                          final firstDigit = widget.phonenumber[0];
+                          if (int.parse(firstDigit) % 2 == 0) {
+                            // New user → go to Profile screen
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const ProfileDetailsScreen(),
+                              ),
+                            );
+                          } else {
+                            // Old user → go to Home screen
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const HomeScreen(),
+                              ),
+                            );
+                          }
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
