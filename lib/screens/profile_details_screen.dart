@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 // import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
+// import 'package:mapbox_search/models/predictions.dart';
 // ignore: unused_import
 import 'package:permission_handler/permission_handler.dart';
 import 'interests_screen.dart';
@@ -24,6 +26,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _cityController = TextEditingController();
+  // List<MapBoxPlace> _placeResults = [];
+  // bool _isSearching = false;
 
   @override
   void didChangeDependencies() {
@@ -31,40 +35,43 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
     ProgressController().updateCurrentStep(1);
   }
 
+  // final _placesSearch = PlacesSearch(
+  //   apiKey: dotenv.env['MAPBOX_ACCESS_TOKEN']!,
+  //   limit: 5,
+  // );
+
   bool _isLoadingLocation = false;
   File? _selectedImage;
   Uint8List? _webImage;
 
-  Future<String?> getCityFromGoogleAPI(double lat, double lng) async {
-    const apiKey = 'AIzaSyBBRhGhiWrdklJ_QjTvwQLw4U9q_nAU5PQ';
+  Future<String?> getCityFromMapbox(double lat, double lng) async {
+    final accessToken = dotenv.env['MAPBOX_ACCESS_TOKEN']; // Secure it via .env
 
     final url = Uri.parse(
-      'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey',
+      'https://api.mapbox.com/geocoding/v5/mapbox.places/$lng,$lat.json?access_token=$accessToken',
     );
 
     final response = await http.get(url);
+
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      if (data['status'] == 'OK') {
-        final results = data['results'];
-        if (results != null && results.isNotEmpty) {
-          for (var result in results) {
-            for (var component in result['address_components']) {
-              final types = List<String>.from(component['types']);
-              if (types.contains('locality') ||
-                  types.contains('administrative_area_level_2') ||
-                  types.contains('administrative_area_level_1')) {
-                return component['long_name'];
-              }
-            }
+      if (data['features'] != null && data['features'].isNotEmpty) {
+        // Loop to find place with context like locality or region
+        for (var feature in data['features']) {
+          final placeTypes = List<String>.from(feature['place_type'] ?? []);
+          if (placeTypes.contains('place') || placeTypes.contains('locality')) {
+            return feature['text']; // City or town name
           }
         }
+
+        // Fallback to the most general name if no city found
+        return data['features'][0]['text'];
       } else {
-        print("Google API error: ${data['status']}");
+        print("No features found.");
       }
     } else {
-      print("Failed to fetch from API. Code: ${response.statusCode}");
+      print("Mapbox API error: ${response.statusCode}");
     }
 
     return null;
@@ -109,8 +116,8 @@ class _ProfileDetailsScreenState extends State<ProfileDetailsScreen> {
 
       print("Got location: ${position.latitude}, ${position.longitude}");
 
-      print("Calling Google Maps Geocoding API...");
-      String? city = await getCityFromGoogleAPI(
+      print("Calling MapBox Geocoding API...");
+      String? city = await getCityFromMapbox(
         position.latitude,
         position.longitude,
       );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class RecommendationCard extends StatelessWidget {
+class OttRecommendationCard extends StatelessWidget {
   final String imagePath;
   final String title;
   final String genre;
@@ -29,7 +29,7 @@ class RecommendationCard extends StatelessWidget {
     Colors.pinkAccent,
   ];
 
-  RecommendationCard({
+  OttRecommendationCard({
     super.key,
     required this.imagePath,
     required this.title,
@@ -78,9 +78,45 @@ class RecommendationCard extends StatelessWidget {
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
 
-                Text("Genre: $genre", style: TextStyle(fontSize: 15)),
-                Text("Year: $year", style: TextStyle(fontSize: 15)),
-                Text("Director: $director", style: TextStyle(fontSize: 15)),
+                Row(
+                  children: [
+                    Text(
+                      'Genre:',
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 112, 112, 112),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(genre, style: TextStyle(fontSize: 15)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Year:',
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 112, 112, 112),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(year, style: TextStyle(fontSize: 15)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Director:',
+                      style: TextStyle(
+                        color: const Color.fromARGB(255, 112, 112, 112),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(director, style: TextStyle(fontSize: 15)),
+                  ],
+                ),
 
                 SizedBox(height: 8),
 

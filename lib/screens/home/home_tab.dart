@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:recofrend/widgets/book_recommendation_card.dart';
+import 'package:recofrend/widgets/food_recommendation_card.dart';
+import 'package:recofrend/widgets/goout_recommendation_card.dart';
 import 'package:recofrend/widgets/ott_recommendation_card.dart';
+import 'package:recofrend/data/dummy_recommendations.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
@@ -11,6 +15,7 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   int selectedInterestIndex = 0;
   final List<String> interests = ['TV & Movies', 'Books', 'Food', 'Go Out'];
+  final ScrollController _scrollController = ScrollController();
 
   Widget _buildInterestButton(String label, {bool isSelected = false}) {
     return Container(
@@ -38,6 +43,104 @@ class _HomeTabState extends State<HomeTab> {
         ),
       ),
     );
+  }
+
+  Widget _buildCard(String section) {
+    final interest = interests[selectedInterestIndex];
+    final dataList = dummyRecommendations[interest];
+
+    if (dataList == null || dataList.isEmpty) return SizedBox();
+
+    return SizedBox(
+      height: 530,
+      child: ListView.builder(
+        controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        physics: BouncingScrollPhysics(),
+        itemCount: dataList.length,
+        itemBuilder: (context, index) {
+          final Map<String, dynamic> data = dataList[index];
+
+          final Widget card;
+
+          switch (interest) {
+            case 'TV & Movies':
+              card = OttRecommendationCard(
+                imagePath: data['imagePath'],
+                title: data['title'],
+                genre: data['genre'],
+                year: data['year'],
+                director: data['director'],
+                platforms: List<String>.from(data['platforms']),
+                popularContent: List<String>.from(data['popularContent']),
+                likedBy: data['likedBy'],
+              );
+              break;
+            case 'Books':
+              card = BookRecommendationCard(
+                imagePath: data['imagePath'],
+                title: data['title'],
+                author: data['author'],
+                year: data['year'],
+                genre: data['genre'],
+                platforms: List<String>.from(data['platforms']),
+                popularContent: List<String>.from(data['popularContent']),
+                likedBy: data['likedBy'],
+              );
+              break;
+            case 'Food':
+              card = FoodRecommendationCard(
+                imagePath: data['imagePath'],
+                title: data['title'],
+                cuisine: data['cuisine'],
+                price: data['price'],
+                time: data['time'],
+                address: data['address'],
+                platforms: List<String>.from(data['platforms']),
+                popularContent: List<String>.from(data['popularContent']),
+                likedBy: data['likedBy'],
+              );
+              break;
+            case 'Go Out':
+              card = GooutRecommendationCard(
+                imagePath: data['imagePath'],
+                title: data['title'],
+                type: data['type'],
+                price: data['price'],
+                time: data['time'],
+                address: data['address'],
+                platforms: List<String>.from(data['platforms']),
+                popularContent: List<String>.from(data['popularContent']),
+                likedBy: data['likedBy'],
+              );
+              break;
+            default:
+              card = SizedBox();
+          }
+
+          return Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: SizedBox(
+              width: 290, // ✅ Fixed width for each card
+              child: card,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  final List<String> sections = [
+    'Top Recommendations',
+    'Trending This Week',
+    'Popular Among Your Friends',
+    'Top Voice Favorites',
+  ];
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -79,6 +182,7 @@ class _HomeTabState extends State<HomeTab> {
                       onTap: () {
                         setState(() {
                           selectedInterestIndex = index;
+                          _scrollController.jumpTo(0);
                         });
                       },
                       child: _buildInterestButton(
@@ -90,76 +194,24 @@ class _HomeTabState extends State<HomeTab> {
                 ),
               ),
               const SizedBox(height: 40),
-              Text(
-                'Top Recommendations',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: RecommendationCard(
-                  imagePath: 'assets/net.jpg',
-                  title: 'Inception',
-                  genre: 'Sci-Fi',
-                  year: '2010',
-                  director: 'Christopher Nolan',
-                  platforms: ['Netflix', 'Amazon'],
-                  popularContent: ['Instagram', 'Youtube'],
-                  likedBy: 'Rahul',
-                ),
-              ),
-              const SizedBox(height: 40),
-              Text(
-                'Trending This Week',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: RecommendationCard(
-                  imagePath: 'assets/net.jpg',
-                  title: 'Inception',
-                  genre: 'Sci-Fi',
-                  year: '2010',
-                  director: 'Christopher Nolan',
-                  platforms: ['Netflix', 'Amazon'],
-                  popularContent: ['Instagram', 'Youtube'],
-                  likedBy: 'Rahul',
-                ),
-              ),
-              const SizedBox(height: 40),
-              Text(
-                'Popular Among Your Friends',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: RecommendationCard(
-                  imagePath: 'assets/net.jpg',
-                  title: 'Inception',
-                  genre: 'Sci-Fi',
-                  year: '2010',
-                  director: 'Christopher Nolan',
-                  platforms: ['Netflix', 'Amazon'],
-                  popularContent: ['Instagram', 'Youtube'],
-                  likedBy: 'Rahul',
-                ),
-              ),
-              const SizedBox(height: 40),
-              Text(
-                'Top Voice Favorites',
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w400),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: RecommendationCard(
-                  imagePath: 'assets/net.jpg',
-                  title: 'Inception',
-                  genre: 'Sci-Fi',
-                  year: '2010',
-                  director: 'Christopher Nolan',
-                  platforms: ['Netflix', 'Amazon'],
-                  popularContent: ['Instagram', 'Youtube'],
-                  likedBy: 'Rahul',
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: sections.map((section) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        section,
+                        style: TextStyle(
+                          fontSize: 25,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      _buildCard(section),
+                      const SizedBox(height: 40),
+                    ],
+                  );
+                }).toList(),
               ),
             ],
           ),
