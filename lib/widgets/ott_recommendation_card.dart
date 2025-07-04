@@ -53,7 +53,6 @@ class OttRecommendationCard extends StatelessWidget {
         children: [
           // Image
           ClipRRect(
-            clipBehavior: Clip.hardEdge,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(12),
               topRight: Radius.circular(12),

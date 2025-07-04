@@ -120,10 +120,7 @@ class _HomeTabState extends State<HomeTab> {
 
           return Padding(
             padding: const EdgeInsets.only(right: 20),
-            child: SizedBox(
-              width: 290, // ✅ Fixed width for each card
-              child: card,
-            ),
+            child: SizedBox(width: 290, child: card),
           );
         },
       ),
@@ -146,8 +143,9 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     return Scrollbar(
-      thumbVisibility: true,
-      trackVisibility: true,
+      // controller: _scrollController,
+      // thumbVisibility: true,
+      // trackVisibility: true,
       thickness: 8,
       radius: Radius.circular(15),
       interactive: true,

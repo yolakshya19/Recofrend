@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recofrend/screens/home/app_bars.dart';
 import 'package:recofrend/screens/home/feed_tab.dart';
 import 'package:recofrend/screens/home/home_tab.dart';
 import 'package:recofrend/screens/home/profile_tab.dart';
@@ -21,32 +22,34 @@ class _HomeScreenState extends State<HomeScreen> {
     ProfileTab(),
   ];
 
+  PreferredSizeWidget _appBars(int index) {
+    switch (index) {
+      case 0:
+        return homeAppBar(() {
+          setState(() {
+            _selectedIndex = 3;
+          });
+        });
+      case 1:
+        return feedAppBar();
+      case 2:
+        return discoverAppBar(() {
+          setState(() {
+            _selectedIndex = 3;
+          });
+        });
+      case 3:
+        return profileAppBar();
+      default:
+        return homeAppBar(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 239, 238, 238),
-      appBar: AppBar(
-        title: Text(
-          'Recofrend',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-          ),
-        ),
-        backgroundColor: Colors.lightBlue,
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _selectedIndex = 3;
-              });
-            },
-            icon: Icon(Icons.account_circle),
-          ),
-        ],
-        elevation: 1,
-      ),
+      appBar: _appBars(_selectedIndex),
       drawer: Drawer(),
       body: IndexedStack(index: _selectedIndex, children: _screens),
       bottomNavigationBar: BottomNavigationBar(
