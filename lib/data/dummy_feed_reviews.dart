@@ -20,6 +20,7 @@ final List<Map<String, dynamic>> dummyFeedReviews = [
       "media": ["assets/net.jpg", "assets/net.jpg"],
       "likes": 124,
       "comments": 18,
+      "time": "2 hours ago",
     },
   },
   {
@@ -43,6 +44,7 @@ final List<Map<String, dynamic>> dummyFeedReviews = [
       "media": ["assets/book.jpg"],
       "likes": 85,
       "comments": 12,
+      "time": "2 hours ago",
     },
   },
   {
@@ -66,6 +68,7 @@ final List<Map<String, dynamic>> dummyFeedReviews = [
       "media": [],
       "likes": 200,
       "comments": 34,
+      "time": "2 hours ago",
     },
   },
 ];
