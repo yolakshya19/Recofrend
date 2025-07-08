@@ -139,6 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    elevation: 3,
                   ),
                   child: isSendingOtp
                       ? const Text(

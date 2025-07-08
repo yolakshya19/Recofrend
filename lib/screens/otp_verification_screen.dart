@@ -193,6 +193,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    elevation: 3,
                   ),
                   child: isVerifyingOtp
                       ? const Text(
@@ -221,11 +222,12 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     Navigator.pop(context);
                   },
                   style: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white, // Blue button
+                    backgroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    elevation: 3,
                   ),
                   child: const Text(
                     "Change Phone Number",
@@ -261,6 +263,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
+                    elevation: 3,
                   ),
                   child: const Text(
                     "Resend OTP",

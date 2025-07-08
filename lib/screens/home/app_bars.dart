@@ -18,8 +18,7 @@ PreferredSizeWidget homeAppBar(VoidCallback onProfileTap) {
   );
 }
 
-// int selectedIndex, Function(int) onTabChange
-PreferredSizeWidget feedAppBar() {
+PreferredSizeWidget feedAppBar(int selectedIndex, Function(int) onTabChange) {
   return AppBar(
     title: Text(
       'Recofrend',
@@ -34,11 +33,10 @@ PreferredSizeWidget feedAppBar() {
       Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
         child: ElevatedButton(
-          // onPressed: () => onTabChange(0),
-          onPressed: () {},
+          onPressed: () => onTabChange(0),
           style: ElevatedButton.styleFrom(
-            // backgroundColor: selectedIndex == 0 ? Colors.black : Colors.white,
-            // foregroundColor: selectedIndex == 0 ? Colors.white : Colors.black,
+            backgroundColor: selectedIndex == 0 ? Colors.black : Colors.white,
+            foregroundColor: selectedIndex == 0 ? Colors.white : Colors.black,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),
@@ -50,11 +48,10 @@ PreferredSizeWidget feedAppBar() {
       Padding(
         padding: const EdgeInsets.only(right: 12),
         child: ElevatedButton(
-          // onPressed: () => onTabChange(1),
-          onPressed: () {},
+          onPressed: () => onTabChange(1),
           style: ElevatedButton.styleFrom(
-            // backgroundColor: selectedIndex == 1 ? Colors.black : Colors.white,
-            // foregroundColor: selectedIndex == 1 ? Colors.white : Colors.black,
+            backgroundColor: selectedIndex == 1 ? Colors.black : Colors.white,
+            foregroundColor: selectedIndex == 1 ? Colors.white : Colors.black,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),

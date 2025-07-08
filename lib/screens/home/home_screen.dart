@@ -14,13 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-
-  final List<Widget> _screens = [
-    HomeTab(),
-    FeedTab(),
-    ReviewTab(),
-    ProfileTab(),
-  ];
+  int selectedFeedTab = 0;
 
   PreferredSizeWidget _appBars(int index) {
     switch (index) {
@@ -31,7 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         });
       case 1:
-        return feedAppBar();
+        return feedAppBar(selectedFeedTab, (newIndex) {
+          setState(() {
+            selectedFeedTab = newIndex;
+          });
+        });
       case 2:
         return discoverAppBar(() {
           setState(() {
@@ -47,11 +45,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> screens = [
+      HomeTab(),
+      FeedTab(selectedFeedTab: selectedFeedTab),
+      ReviewTab(),
+      ProfileTab(),
+    ];
+    
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 239, 238, 238),
       appBar: _appBars(_selectedIndex),
       drawer: Drawer(),
-      body: IndexedStack(index: _selectedIndex, children: _screens),
+      body: IndexedStack(index: _selectedIndex, children: screens),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,

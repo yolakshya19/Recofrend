@@ -21,6 +21,7 @@ final List<Map<String, dynamic>> dummyFeedReviews = [
       "likes": 124,
       "comments": 18,
       "time": "2 hours ago",
+      "isTrending": true,
     },
   },
   {
@@ -45,6 +46,7 @@ final List<Map<String, dynamic>> dummyFeedReviews = [
       "likes": 85,
       "comments": 12,
       "time": "2 hours ago",
+      "isTrending": true,
     },
   },
   {
@@ -69,6 +71,7 @@ final List<Map<String, dynamic>> dummyFeedReviews = [
       "likes": 200,
       "comments": 34,
       "time": "2 hours ago",
+      "isTrending": false,
     },
   },
 ];
